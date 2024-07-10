@@ -1,0 +1,3 @@
+C:\Users\Paula\Documents\cs\2dgamesrc/shaders/sprite.vert
+C:\Users\Paula\Documents\cs\2dgame\src\shaders\sprite.vert
+C:\Users\Paula\Documents\cs\2dgame\src\textures\awesomeface.png

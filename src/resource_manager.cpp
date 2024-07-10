@@ -5,17 +5,20 @@
 #include <sstream>
 
 #define STB_IMAGE_IMPLEMENTATION
+#include "logger.hpp"
 #include "stb_image.h"
 
 std::map<std::string, Shader> ResourceManager::Shaders;
 std::map<std::string, Texture2D> ResourceManager::Textures;
+
+Logger logger("log.txt");
 
 Shader ResourceManager::load_shader(const char *vshader_file, const char *fshader_file, const char *gshader_file, std::string name) {
     Shaders[name] = load_shader_from_file(vshader_file, fshader_file, gshader_file);
     return Shaders[name];
 };
 
-Shader ResourceManager::get_shader(std::string name) {
+Shader &ResourceManager::get_shader(std::string name) {
     return Shaders[name];
 };
 
@@ -24,7 +27,7 @@ Texture2D ResourceManager::load_texture(const char *file, bool alpha, std::strin
     return Textures[name];
 };
 
-Texture2D ResourceManager::get_texture(std::string name) {
+Texture2D &ResourceManager::get_texture(std::string name) {
     return Textures[name];
 };
 
@@ -38,9 +41,12 @@ void ResourceManager::Clear() {
 };
 
 Shader ResourceManager::load_shader_from_file(const char *vshader_file, const char *fshader_file, const char *gshader_file) {
+    std::string vsfile = get_path(vshader_file);
+    std::string fsfile = get_path(fshader_file);
+
     std::string vertex_code, fragment_code, geometry_code;
     try {
-        std::ifstream vertex_shader_file(vshader_file), fragment_shader_file(fshader_file);
+        std::ifstream vertex_shader_file(vsfile), fragment_shader_file(fsfile);
         std::stringstream vshader_stream, fshader_stream;
         vshader_stream << vertex_shader_file.rdbuf();
         fshader_stream << fragment_shader_file.rdbuf();
@@ -52,7 +58,8 @@ Shader ResourceManager::load_shader_from_file(const char *vshader_file, const ch
         fragment_code = fshader_stream.str();
 
         if (gshader_file != nullptr) {
-            std::ifstream geometry_shader_file(gshader_file);
+            std::string gsfile = get_path(gshader_file);
+            std::ifstream geometry_shader_file(gsfile);
             std::stringstream gshader_stream;
             gshader_stream << geometry_shader_file.rdbuf();
             geometry_shader_file.close();
@@ -78,7 +85,7 @@ Texture2D ResourceManager::load_texture_from_file(const char *file, bool alpha) 
         texture.image_format = GL_RGBA;
     }
     int width, height, nr_channels;
-    unsigned char *data = stbi_load(file, &width, &height, &nr_channels, 0);
+    unsigned char *data = stbi_load(get_path(file).c_str(), &width, &height, &nr_channels, 0);
     texture.generate(width, height, data);
     stbi_image_free(data);
     return texture;
@@ -87,7 +94,7 @@ Texture2D ResourceManager::load_texture_from_file(const char *file, bool alpha) 
 std::string ResourceManager::get_path(std::string path_from_src) {
     char buffer[1024];
     if (_getcwd(buffer, 1024)) {
-        return (std::string(buffer) + path_from_src);
+        return (std::string(buffer) + "\\" + path_from_src);
     } else {
         return "";
     }
