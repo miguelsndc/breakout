@@ -2,7 +2,8 @@
     "files.associations": {
         "sstream": "cpp",
         "fstream": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "iostream": "cpp"
     },
     "cmake.ignoreCMakeListsMissing": true
 }

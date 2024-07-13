@@ -62,14 +62,10 @@ void Game::process_input(float dt) {
     if (this->state == GAME_ACTIVE) {
         float velocity = PLAYER_VELOCITY * dt;
         if (this->keys[GLFW_KEY_A]) {
-            if (player->position.x >= 0.0f) {
-                player->position.x -= velocity;
-            }
+            player->position.x = std::max(player->position.x - velocity, 0.0f);
         }
         if (this->keys[GLFW_KEY_D]) {
-            if (player->position.x <= this->width - player->size.x) {
-                player->position.x += velocity;
-            }
+            player->position.x = std::min(player->position.x + velocity, this->width - player->size.x);
         }
     }
 }

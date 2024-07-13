@@ -5,13 +5,10 @@
 #include <sstream>
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "logger.hpp"
 #include "stb_image.h"
 
 std::map<std::string, Shader> ResourceManager::Shaders;
 std::map<std::string, Texture2D> ResourceManager::Textures;
-
-Logger logger("log.txt");
 
 Shader ResourceManager::load_shader(const char *vshader_file, const char *fshader_file, const char *gshader_file, std::string name) {
     Shaders[name] = load_shader_from_file(vshader_file, fshader_file, gshader_file);
